@@ -1,20 +1,21 @@
 import os
-from yandex import YandexDiskUploader
+from time import sleep
 
-
-TOKEN = "y0_AgAAAAASKx4kAAxhPAAAAAEP1YV2AAAtOQASNSVLCKb5RkYnU8Ubj2NwgQ"
-
+from dotenv import load_dotenv
+from cloud.yandex import YandexDiskUploader
 
 if __name__ == "__main__":
+    load_dotenv()
     uploader = YandexDiskUploader(
-        token=TOKEN,
-        base_folder=r"C:\Users\Надежда\PycharmProjects\SyncFiles\test\паапка",
+        token=f"{os.getenv('TOKEN')}",
+        base_folder=f"{os.getenv('BASE_DIR_PATH')}",
+        savedir=f"{os.getenv('CLOUD_DIR_NAME')}",
+        logpath=f"{os.getenv('LOG_DIR_PATH')}",
     )
-    r"""uploader.load(
-        path=r"C:\Users\Надежда\PycharmProjects\SyncFiles\test\паапка"
-    )"""
-    uploader.get_info()
-    '''uploader.delete(
-        file_path=r"test/This.txt"
-    )'''
-    r'''uploader.reload(path=r"C:\Users\Надежда\PycharmProjects\SyncFiles\test\паапка")'''
+    while True:
+        uploader.get_info()
+        check = os.getenv("CHECK_INTERVAL")
+        if check is not None:
+            sleep(int(check))
+        else:
+            sleep(5000)
